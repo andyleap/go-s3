@@ -7,6 +7,15 @@ import (
 	"net/http"
 )
 
+type Error struct {
+	Code    string `xml:"Code"`
+	Message string `xml:"Message"`
+}
+
+func (e Error) Error() string {
+	return fmt.Sprintf("%s (%s)", e.Message, e.Code)
+}
+
 func ResponseError(res *http.Response) error {
 	b, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -16,14 +25,10 @@ func ResponseError(res *http.Response) error {
 }
 
 func ResponseErrorFrom(b []byte) error {
-	var payload struct {
-		XMLName xml.Name `xml:"Error"`
-		Code    string   `xml:"Code"`
-		Message string   `xml:"Message"`
-	}
-	if err := xml.Unmarshal(b, &payload); err != nil {
+	resperr := Error{}
+	if err := xml.Unmarshal(b, &resperr); err != nil {
 		return fmt.Errorf("unable to parse response xml: %s", err)
 	}
 
-	return fmt.Errorf("%s (%s) [raw %s]", payload.Message, payload.Code, string(b))
+	return resperr
 }
