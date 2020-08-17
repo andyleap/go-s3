@@ -80,6 +80,10 @@ func (c *Client) get(path string, headers *http.Header) (*http.Response, error) 
 	return c.request("GET", path, nil, headers)
 }
 
+func (c *Client) head(path string, headers *http.Header) (*http.Response, error) {
+	return c.request("HEAD", path, nil, headers)
+}
+
 func (c *Client) delete(path string, headers *http.Header) (*http.Response, error) {
 	return c.request("DELETE", path, nil, headers)
 }

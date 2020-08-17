@@ -7,11 +7,15 @@ import (
 	"time"
 )
 
-func (c *Client) List() ([]Object, error) {
+func (c *Client) List(prefix string) ([]Object, error) {
 	objects := make([]Object, 0)
+	params := ""
+	if prefix != "" {
+		params = fmt.Sprintf("&prefix=%s", prefix)
+	}
 	ctok := ""
 	for {
-		res, err := c.get(fmt.Sprintf("/?list-type=2&fetch-owner=true%s", ctok), nil)
+		res, err := c.get(fmt.Sprintf("/?list-type=2&fetch-owner=true%s%s", params, ctok), nil)
 		if err != nil {
 			return nil, err
 		}
