@@ -1,4 +1,4 @@
-module github.com/jhunt/go-s3
+module github.com/andyleap/go-s3
 
 go 1.14
 
