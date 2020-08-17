@@ -1,6 +1,7 @@
 package s3
 
 import (
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -37,4 +38,17 @@ func (c *Client) Head(key string) (*Object, error) {
 	}
 
 	return o, nil
+}
+
+func (c *Client) Put(key string, body []byte, hdr *http.Header) error {
+	res, err := c.put(key, body, hdr)
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != 200 {
+		return ResponseError(res)
+	}
+
+	return nil
 }
