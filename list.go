@@ -3,6 +3,7 @@ package s3
 import (
 	"encoding/xml"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"time"
 )
@@ -140,7 +141,7 @@ func (li *ListIter) refill() error {
 func (li *ListIter) Next() (*Object, error) {
 	if len(li.objects) == 0 {
 		if li.ctok == "" {
-			return nil, nil
+			return nil, io.EOF
 		}
 		err := li.refill()
 		if err != nil {
